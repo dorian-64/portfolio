@@ -1,0 +1,125 @@
+<div class="auth-page">
+  <div class="auth-card tfa-card">
+
+    <!-- Step 1: Intro -->
+    <div *ngIf="step === 1" class="tfa-step">
+      <div class="tfa-icon">&#128274;</div>
+      <h1>Sécurisez votre compte</h1>
+      <p class="tfa-desc">
+        La double authentification (2FA) ajoute une couche de sécurité supplémentaire à votre compte.
+        À chaque connexion, un code unique sera requis.
+      </p>
+      <div class="feature-list">
+        <div class="feature-item">
+          <span class="fi-icon">&#9989;</span>
+          <div>
+            <strong>Protection maximale</strong>
+            <p>Même si votre mot de passe est compromis, votre compte reste sécurisé</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <span class="fi-icon">&#128241;</span>
+          <div>
+            <strong>Compatible Google Authenticator</strong>
+            <p>Utilisez n'importe quelle application TOTP pour générer vos codes</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <span class="fi-icon">&#9201;</span>
+          <div>
+            <strong>Code renouvelé toutes les 30s</strong>
+            <p>Chaque code n'est valide que 30 secondes pour une sécurité maximale</p>
+          </div>
+        </div>
+      </div>
+      <div class="tfa-actions">
+        <button class="btn-submit" (click)="nextStep()">Configurer la 2FA &#128274;</button>
+        <button class="btn-skip" (click)="skip()">Passer pour l'instant</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Show Secret -->
+    <div *ngIf="step === 2" class="tfa-step">
+      <div class="step-badge">Étape 1/2</div>
+      <h1>Votre clé secrète</h1>
+      <p class="tfa-desc">
+        Ouvrez votre application d'authentification (Google Authenticator, Authy, etc.)
+        et entrez cette clé manuellement, ou copiez-la.
+      </p>
+
+      <div class="secret-box">
+        <div class="secret-label">Clé secrète TOTP</div>
+        <div class="secret-code">{{ secretFormatted }}</div>
+        <div class="secret-meta">HeartSync • {{ userEmail }}</div>
+      </div>
+
+      <div class="live-code-preview">
+        <div class="lcp-header">Code actuel (simulation)</div>
+        <div class="lcp-code">{{ currentCode }}</div>
+        <div class="lcp-timer">
+          <div class="timer-track">
+            <div class="timer-fill" [style.width]="timerPercent + '%'"
+              [style.background]="remainingSeconds <= 5 ? '#ff4444' : 'linear-gradient(90deg, #FF4458, #e91e8c)'"></div>
+          </div>
+          <span [style.color]="remainingSeconds <= 5 ? '#ff4444' : '#888'">{{ remainingSeconds }}s</span>
+        </div>
+        <p class="lcp-note">Ce code est simulé pour la démonstration. Utilisez votre app d'authentification en production.</p>
+      </div>
+
+      <div class="tfa-actions">
+        <button class="btn-submit" (click)="nextStep()">J'ai configuré mon app →</button>
+        <button class="btn-back" (click)="step = 1">← Retour</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Verify -->
+    <div *ngIf="step === 3" class="tfa-step">
+      <div class="step-badge">Étape 2/2</div>
+      <div class="tfa-icon small">&#128272;</div>
+      <h1>Vérifier la configuration</h1>
+      <p class="tfa-desc">Entrez le code à 6 chiffres affiché dans votre application pour confirmer la configuration.</p>
+
+      <div class="alert alert-error" *ngIf="error">
+        <span>&#9888;</span> {{ error }}
+      </div>
+
+      <div class="code-hint">
+        Code actuel : <strong class="hint-code">{{ currentCode }}</strong>
+        <span class="hint-timer">({{ remainingSeconds }}s)</span>
+      </div>
+
+      <div class="code-input-wrapper">
+        <input
+          type="text"
+          inputmode="numeric"
+          [value]="verifyCode"
+          (input)="onCodeInput($event)"
+          placeholder="000000"
+          class="code-input"
+          maxlength="6"
+          autocomplete="one-time-code"
+        />
+      </div>
+
+      <div class="tfa-actions">
+        <button class="btn-submit" [disabled]="loading || verifyCode.length !== 6" (click)="verify()">
+          <span *ngIf="loading" class="spinner"></span>
+          {{ loading ? 'Vérification...' : 'Activer la 2FA' }}
+        </button>
+        <button class="btn-back" (click)="step = 2">← Retour</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Success -->
+    <div *ngIf="step === 4" class="tfa-step success-step">
+      <div class="success-icon">&#127881;</div>
+      <h1>2FA activée !</h1>
+      <p class="tfa-desc">Votre compte est maintenant protégé par la double authentification. Bravo !</p>
+      <div class="success-badge">
+        <span>&#128274;</span> Compte ultra-sécurisé
+      </div>
+      <button class="btn-submit" (click)="goToApp()">Compléter mon profil →</button>
+    </div>
+
+  </div>
+</div>

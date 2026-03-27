@@ -1,0 +1,112 @@
+<div class="home">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-badge">&#10084; Trouvez l'amour en toute sécurité</div>
+      <h1 class="hero-title">
+        Rencontrez votre<br>
+        <span class="gradient-text">âme sœur</span>
+      </h1>
+      <p class="hero-subtitle">
+        HeartSync vous connecte avec des personnes partageant vos valeurs.<br>
+        Protégé par une double authentification pour votre sécurité totale.
+      </p>
+      <div class="hero-actions">
+        <a routerLink="/inscription" class="btn-primary">Commencer gratuitement</a>
+        <a routerLink="/connexion" class="btn-secondary">J'ai déjà un compte</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat" *ngFor="let s of stats">
+          <span class="stat-value">{{ s.value }}</span>
+          <span class="stat-label">{{ s.label }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="floating-cards">
+        <div class="profile-card-preview card1">
+          <div class="card-avatar" style="background: linear-gradient(135deg, #e91e8c, #FF4458)">SM</div>
+          <div class="card-info"><strong>Sophie, 26</strong><span>Paris</span></div>
+        </div>
+        <div class="profile-card-preview card2">
+          <div class="card-avatar" style="background: linear-gradient(135deg, #3f51b5, #00bcd4)">LD</div>
+          <div class="card-info"><strong>Lucas, 29</strong><span>Lyon</span></div>
+        </div>
+        <div class="profile-card-preview card3">
+          <div class="card-avatar" style="background: linear-gradient(135deg, #4caf50, #009688)">EB</div>
+          <div class="card-info"><strong>Emma, 24</strong><span>Bordeaux</span></div>
+        </div>
+        <div class="match-badge">&#10084; Match!</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="section-container">
+      <h2 class="section-title">Pourquoi choisir <span class="gradient-text">HeartSync</span> ?</h2>
+      <p class="section-subtitle">Une application pensée pour votre sécurité et votre bonheur</p>
+      <div class="features-grid">
+        <div class="feature-card" *ngFor="let f of features">
+          <div class="feature-icon" [innerHTML]="f.icon"></div>
+          <h3>{{ f.title }}</h3>
+          <p>{{ f.desc }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2FA Section -->
+  <section class="security-section">
+    <div class="section-container">
+      <div class="security-content">
+        <div class="security-text">
+          <div class="badge-2fa">&#128274; Double Authentification</div>
+          <h2>Votre compte, <span class="gradient-text">ultra-sécurisé</span></h2>
+          <p>HeartSync utilise l'authentification à deux facteurs (2FA) pour protéger votre compte. À chaque connexion, un code TOTP unique est requis en plus de votre mot de passe.</p>
+          <ul class="security-list">
+            <li>&#10003; Code à 6 chiffres renouvelé toutes les 30 secondes</li>
+            <li>&#10003; Compatible avec Google Authenticator</li>
+            <li>&#10003; Activable en un clic depuis vos paramètres</li>
+            <li>&#10003; Protection contre les accès non autorisés</li>
+          </ul>
+          <a routerLink="/inscription" class="btn-primary">Sécuriser mon compte</a>
+        </div>
+        <div class="security-visual">
+          <div class="totp-mockup">
+            <div class="totp-header">&#128274; Vérification 2FA</div>
+            <p class="totp-desc">Entrez le code de votre application</p>
+            <div class="totp-code">
+              <span>3</span><span>8</span><span>4</span><span>7</span><span>2</span><span>1</span>
+            </div>
+            <div class="totp-timer">
+              <div class="timer-bar"></div>
+              <span>Expire dans 24s</span>
+            </div>
+            <button class="totp-btn">Vérifier</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Prêt(e) à trouver l'amour ?</h2>
+      <p>Rejoignez des milliers de célibataires qui ont trouvé leur moitié sur HeartSync</p>
+      <a routerLink="/inscription" class="btn-primary-large">Créer mon profil gratuitement</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <span class="brand-icon">&#10084;</span> HeartSync
+      </div>
+      <p>© 2024 HeartSync. Trouvez l'amour en toute sécurité.</p>
+    </div>
+  </footer>
+</div>

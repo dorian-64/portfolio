@@ -1,0 +1,32 @@
+<div class="matches-page">
+  <div class="page-header">
+    <h1>&#10084; Mes Matchs</h1>
+    <p>{{ matchesWithProfiles.length }} match(s) trouvé(s)</p>
+  </div>
+
+  <div class="matches-container" *ngIf="matchesWithProfiles.length > 0">
+    <div class="match-card" *ngFor="let item of matchesWithProfiles" (click)="openChat(item.match.id)">
+      <div class="match-avatar" [style.background]="'linear-gradient(135deg, ' + item.profile.avatarColor + ', ' + item.profile.avatarColor + '99)'">
+        <span>{{ getInitials(item.profile) }}</span>
+        <div class="online-dot"></div>
+      </div>
+      <div class="match-info">
+        <div class="match-name-row">
+          <strong>{{ item.profile.firstName }}, {{ item.profile.age }}</strong>
+          <span class="match-time">{{ getTimeAgo(item.match.lastMessageTime || item.match.createdAt) }}</span>
+        </div>
+        <p class="match-last-msg" *ngIf="item.match.lastMessage">{{ item.match.lastMessage }}</p>
+        <p class="match-new" *ngIf="!item.match.lastMessage">&#127881; Nouveau match ! Dites bonjour !</p>
+        <span class="match-location">&#128205; {{ item.profile.location }}</span>
+      </div>
+      <div class="match-arrow">›</div>
+    </div>
+  </div>
+
+  <div class="no-matches" *ngIf="matchesWithProfiles.length === 0">
+    <div class="nm-icon">&#128149;</div>
+    <h2>Aucun match pour l'instant</h2>
+    <p>Continuez à swiper pour trouver votre match !</p>
+    <a routerLink="/decouvrir" class="btn-discover">Découvrir des profils</a>
+  </div>
+</div>

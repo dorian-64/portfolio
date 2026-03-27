@@ -1,0 +1,72 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-logo">&#10084;</div>
+      <h1>Bon retour !</h1>
+      <p>Connectez-vous à votre compte HeartSync</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="auth-form">
+      <div class="alert alert-error" *ngIf="error">
+        <span>&#9888;</span> {{ error }}
+      </div>
+
+      <div class="form-group">
+        <label for="email">Adresse email</label>
+        <div class="input-wrapper">
+          <span class="input-icon">&#9993;</span>
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="vous@exemple.com"
+            class="form-input"
+            required
+            autocomplete="email"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <div class="input-wrapper">
+          <span class="input-icon">&#128274;</span>
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Votre mot de passe"
+            class="form-input"
+            required
+            autocomplete="current-password"
+          />
+          <button type="button" class="toggle-pw" (click)="showPassword = !showPassword">
+            {{ showPassword ? '&#128065;' : '&#128064;' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="form-footer-link">
+        <a routerLink="/mot-de-passe-oublie">Mot de passe oublié ?</a>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="loading">
+        <span *ngIf="loading" class="spinner"></span>
+        <span *ngIf="!loading">Se connecter</span>
+        <span *ngIf="loading">Connexion...</span>
+      </button>
+    </form>
+
+    <div class="auth-divider"><span>ou</span></div>
+
+    <div class="auth-switch">
+      Pas encore inscrit ? <a routerLink="/inscription">Créer un compte</a>
+    </div>
+
+    <div class="security-note">
+      <span>&#128274;</span> Protégé par la double authentification 2FA
+    </div>
+  </div>
+</div>

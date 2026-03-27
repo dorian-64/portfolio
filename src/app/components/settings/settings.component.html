@@ -1,0 +1,160 @@
+<div class="settings-page">
+  <div class="settings-container" *ngIf="user">
+    <div class="page-header">
+      <h1>&#9881; Paramètres</h1>
+      <p>Gérez votre compte et votre sécurité</p>
+    </div>
+
+    <!-- Account Info -->
+    <div class="settings-card">
+      <div class="settings-card-header">
+        <div class="settings-card-icon">&#128100;</div>
+        <div>
+          <h3>Mon compte</h3>
+          <p>{{ user.email }}</p>
+        </div>
+      </div>
+      <div class="account-info">
+        <div class="ai-row">
+          <span class="ai-label">Prénom</span>
+          <span>{{ user.firstName }}</span>
+        </div>
+        <div class="ai-row">
+          <span class="ai-label">Nom</span>
+          <span>{{ user.lastName }}</span>
+        </div>
+        <div class="ai-row">
+          <span class="ai-label">Email</span>
+          <span>{{ user.email }}</span>
+        </div>
+        <div class="ai-row">
+          <span class="ai-label">Membre depuis</span>
+          <span>{{ user.createdAt | date:'longDate' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2FA Section -->
+    <div class="settings-card">
+      <div class="settings-card-header clickable" (click)="toggleTwoFA()">
+        <div class="settings-card-icon">&#128274;</div>
+        <div class="settings-card-info">
+          <h3>Double Authentification (2FA)</h3>
+          <p>Protégez votre compte avec un code TOTP</p>
+        </div>
+        <div class="tfa-status" [class.enabled]="user.twoFactorEnabled">
+          {{ user.twoFactorEnabled ? '✓ Activée' : '✗ Désactivée' }}
+        </div>
+        <span class="chevron">{{ showTwoFASection ? '▲' : '▼' }}</span>
+      </div>
+
+      <div class="tfa-panel" *ngIf="showTwoFASection">
+        <!-- Info step -->
+        <div *ngIf="twoFAStep === 'info'" class="tfa-info">
+          <div class="tfa-status-big" [class.enabled]="user.twoFactorEnabled">
+            <span>{{ user.twoFactorEnabled ? '&#128274; 2FA activée' : '&#128275; 2FA désactivée' }}</span>
+            <p>{{ user.twoFactorEnabled ? 'Votre compte est protégé par la double authentification.' : 'Activez la 2FA pour sécuriser votre compte.' }}</p>
+          </div>
+
+          <!-- Live code display when enabled -->
+          <div class="live-code-box" *ngIf="user.twoFactorEnabled">
+            <div class="lcb-label">Votre code actuel (simulation)</div>
+            <div class="lcb-code">{{ currentCode }}</div>
+            <div class="lcb-timer">
+              <div class="timer-track">
+                <div class="timer-fill"
+                  [style.width]="timerPercent + '%'"
+                  [style.background]="remainingSeconds <= 5 ? '#ff4444' : 'linear-gradient(90deg, #FF4458, #e91e8c)'">
+                </div>
+              </div>
+              <span [style.color]="remainingSeconds <= 5 ? '#ff4444' : '#888'">{{ remainingSeconds }}s</span>
+            </div>
+          </div>
+
+          <button class="btn-tfa-toggle"
+            [class.disable]="user.twoFactorEnabled"
+            (click)="initTwoFAChange()">
+            {{ user.twoFactorEnabled ? '&#128275; Désactiver la 2FA' : '&#128274; Activer la 2FA' }}
+          </button>
+        </div>
+
+        <!-- Setup step (enabling) -->
+        <div *ngIf="twoFAStep === 'setup'" class="tfa-setup">
+          <p>Scannez cette clé dans votre app authenticator, puis entrez le code généré.</p>
+          <div class="secret-box">
+            <div class="secret-code">{{ secretFormatted }}</div>
+          </div>
+          <div class="live-code-hint">Code actuel : <strong>{{ currentCode }}</strong> ({{ remainingSeconds }}s)</div>
+          <div class="alert-error" *ngIf="twoFAError">&#9888; {{ twoFAError }}</div>
+          <input type="text" inputmode="numeric" [value]="twoFACode" (input)="onTwoFACodeInput($event)"
+            placeholder="Code à 6 chiffres" class="code-input-small" maxlength="6" />
+          <div class="setup-actions">
+            <button class="btn-confirm" (click)="confirmTwoFA()">Confirmer et activer</button>
+            <button class="btn-cancel-tfa" (click)="twoFAStep = 'info'">Annuler</button>
+          </div>
+        </div>
+
+        <!-- Verify to disable -->
+        <div *ngIf="twoFAStep === 'verify-disable'" class="tfa-setup">
+          <p class="warning-text">&#9888; Pour désactiver la 2FA, confirmez votre code actuel.</p>
+          <div class="live-code-hint">Code actuel : <strong>{{ currentCode }}</strong> ({{ remainingSeconds }}s)</div>
+          <div class="alert-error" *ngIf="twoFAError">&#9888; {{ twoFAError }}</div>
+          <input type="text" inputmode="numeric" [value]="twoFACode" (input)="onTwoFACodeInput($event)"
+            placeholder="Code à 6 chiffres" class="code-input-small" maxlength="6" />
+          <div class="setup-actions">
+            <button class="btn-confirm disable" (click)="confirmTwoFA()">Confirmer et désactiver</button>
+            <button class="btn-cancel-tfa" (click)="twoFAStep = 'info'">Annuler</button>
+          </div>
+        </div>
+
+        <!-- Done -->
+        <div *ngIf="twoFAStep === 'done'" class="tfa-done">
+          <div class="done-icon">&#10003;</div>
+          <p>{{ user.twoFactorEnabled ? '2FA activée avec succès !' : '2FA désactivée.' }}</p>
+          <button class="btn-cancel-tfa" (click)="twoFAStep = 'info'">Fermer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Password Section -->
+    <div class="settings-card">
+      <div class="settings-card-header clickable" (click)="showPasswordSection = !showPasswordSection">
+        <div class="settings-card-icon">&#128272;</div>
+        <div>
+          <h3>Changer le mot de passe</h3>
+          <p>Mettez à jour votre mot de passe</p>
+        </div>
+        <span class="chevron">{{ showPasswordSection ? '▲' : '▼' }}</span>
+      </div>
+
+      <div class="pw-panel" *ngIf="showPasswordSection">
+        <div class="alert-error" *ngIf="passwordError">&#9888; {{ passwordError }}</div>
+        <div class="alert-success" *ngIf="passwordSuccess">&#10003; {{ passwordSuccess }}</div>
+
+        <div class="form-group">
+          <label>Mot de passe actuel</label>
+          <input [type]="showPasswords ? 'text' : 'password'" [(ngModel)]="currentPassword" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label>Nouveau mot de passe</label>
+          <input [type]="showPasswords ? 'text' : 'password'" [(ngModel)]="newPassword" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label>Confirmer le nouveau mot de passe</label>
+          <input [type]="showPasswords ? 'text' : 'password'" [(ngModel)]="confirmPassword" class="form-input" />
+        </div>
+        <label class="show-pw-label">
+          <input type="checkbox" [(ngModel)]="showPasswords" /> Afficher les mots de passe
+        </label>
+        <button class="btn-confirm" (click)="changePassword()">Modifier le mot de passe</button>
+      </div>
+    </div>
+
+    <!-- Logout & Danger -->
+    <div class="settings-card danger-card">
+      <button class="btn-logout-full" (click)="logout()">
+        &#9711; Se déconnecter
+      </button>
+    </div>
+  </div>
+</div>

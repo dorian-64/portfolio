@@ -1,0 +1,131 @@
+<div class="profile-page">
+  <div class="profile-container">
+
+    <!-- Avatar & Name -->
+    <div class="profile-hero">
+      <div class="profile-avatar" [style.background]="'linear-gradient(135deg, ' + profile.avatarColor + ', ' + profile.avatarColor + '99)'">
+        <span>{{ initials }}</span>
+      </div>
+      <div class="profile-identity">
+        <h1>{{ profile.firstName }} {{ profile.lastName }}</h1>
+        <div class="profile-tags">
+          <span class="tag">&#128205; {{ profile.location || 'Localisation non renseignée' }}</span>
+          <span class="tag">&#128188; {{ profile.occupation || 'Profession non renseignée' }}</span>
+        </div>
+      </div>
+      <button class="edit-btn" (click)="toggleEdit()" *ngIf="!editing">
+        &#9998; Modifier
+      </button>
+    </div>
+
+    <!-- Success banner -->
+    <div class="alert-success" *ngIf="saved">
+      &#10003; Profil sauvegardé avec succès !
+    </div>
+
+    <!-- Error -->
+    <div class="alert-error" *ngIf="error">
+      &#9888; {{ error }}
+    </div>
+
+    <!-- View mode -->
+    <div *ngIf="!editing" class="profile-view">
+      <div class="profile-section">
+        <h3>À propos de moi</h3>
+        <p class="bio-text">{{ profile.bio || 'Aucune bio renseignée.' }}</p>
+      </div>
+      <div class="profile-section">
+        <h3>Informations</h3>
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Âge</span><span>{{ profile.age }} ans</span></div>
+          <div class="info-item"><span class="info-label">Taille</span><span>{{ profile.height || '—' }} cm</span></div>
+          <div class="info-item"><span class="info-label">Études</span><span>{{ profile.education || '—' }}</span></div>
+          <div class="info-item"><span class="info-label">Cherche</span><span>{{ profile.lookingFor }}</span></div>
+        </div>
+      </div>
+      <div class="profile-section" *ngIf="profile.interests.length > 0">
+        <h3>Centres d'intérêt</h3>
+        <div class="interests-display">
+          <span class="interest-tag" *ngFor="let i of profile.interests">{{ i }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit mode -->
+    <div *ngIf="editing" class="profile-edit">
+      <div class="form-section">
+        <h3>Informations de base</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Âge</label>
+            <input type="number" [(ngModel)]="profile.age" class="form-input" min="18" max="99" />
+          </div>
+          <div class="form-group">
+            <label>Taille (cm)</label>
+            <input type="number" [(ngModel)]="profile.height" class="form-input" min="140" max="220" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Ville</label>
+            <input type="text" [(ngModel)]="profile.location" class="form-input" placeholder="Paris, Lyon..." />
+          </div>
+          <div class="form-group">
+            <label>Profession</label>
+            <input type="text" [(ngModel)]="profile.occupation" class="form-input" placeholder="Ingénieur..." />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Formation</label>
+          <input type="text" [(ngModel)]="profile.education" class="form-input" placeholder="Master, Bac+5..." />
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Bio</h3>
+        <textarea
+          [(ngModel)]="profile.bio"
+          class="form-textarea"
+          placeholder="Décrivez-vous en quelques mots... Vos passions, votre personnalité..."
+          maxlength="500"
+          rows="4"
+        ></textarea>
+        <div class="char-count">{{ profile.bio.length }}/500</div>
+      </div>
+
+      <div class="form-section">
+        <h3>Je cherche</h3>
+        <div class="options-grid">
+          <div class="option-card" [class.selected]="profile.lookingFor === 'homme'" (click)="profile.lookingFor = 'homme'">
+            &#128104; Homme
+          </div>
+          <div class="option-card" [class.selected]="profile.lookingFor === 'femme'" (click)="profile.lookingFor = 'femme'">
+            &#128105; Femme
+          </div>
+          <div class="option-card" [class.selected]="profile.lookingFor === 'tous'" (click)="profile.lookingFor = 'tous'">
+            &#128149; Tous
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Centres d'intérêt <span class="hint">({{ profile.interests.length }}/8 sélectionnés)</span></h3>
+        <div class="interests-picker">
+          <span
+            *ngFor="let i of allInterests"
+            class="interest-option"
+            [class.selected]="isSelected(i)"
+            (click)="toggleInterest(i)">
+            {{ i }}
+          </span>
+        </div>
+      </div>
+
+      <div class="edit-actions">
+        <button class="btn-save" (click)="save()">&#10003; Sauvegarder</button>
+        <button class="btn-cancel" (click)="toggleEdit()">Annuler</button>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<div class="chat-page" *ngIf="otherProfile">
+  <!-- Header -->
+  <div class="chat-header">
+    <button class="back-btn" (click)="goBack()">&#8592;</button>
+    <div class="chat-header-avatar"
+      [style.background]="'linear-gradient(135deg, ' + otherProfile.avatarColor + ', ' + otherProfile.avatarColor + '99)'">
+      {{ getInitials(otherProfile) }}
+      <div class="header-online-dot"></div>
+    </div>
+    <div class="chat-header-info">
+      <strong>{{ otherProfile.firstName }}, {{ otherProfile.age }}</strong>
+      <span class="online-status">En ligne</span>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div class="messages-container" #messagesContainer>
+    <div class="match-banner">
+      <span>&#10084;</span> Vous avez matché ! Commencez la conversation.
+    </div>
+
+    <div *ngFor="let msg of messages" class="message-row" [class.mine]="isMine(msg)">
+      <div class="bubble-wrapper" [class.mine]="isMine(msg)">
+        <div class="message-avatar" *ngIf="!isMine(msg)"
+          [style.background]="'linear-gradient(135deg, ' + otherProfile.avatarColor + ', ' + otherProfile.avatarColor + '99)'">
+          {{ getInitials(otherProfile) }}
+        </div>
+        <div class="message-bubble" [class.mine]="isMine(msg)">
+          {{ msg.content }}
+          <span class="message-time">{{ formatTime(msg.timestamp) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typing indicator -->
+    <div class="message-row" *ngIf="isTyping">
+      <div class="bubble-wrapper">
+        <div class="message-avatar"
+          [style.background]="'linear-gradient(135deg, ' + otherProfile.avatarColor + ', ' + otherProfile.avatarColor + '99)'">
+          {{ getInitials(otherProfile) }}
+        </div>
+        <div class="typing-bubble">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="chat-input-area">
+    <div class="input-row">
+      <textarea
+        [(ngModel)]="newMessage"
+        (keydown)="onKeyDown($event)"
+        placeholder="Écrire un message..."
+        class="chat-input"
+        rows="1"
+      ></textarea>
+      <button class="send-btn" (click)="sendMessage()" [disabled]="!newMessage.trim()">
+        &#10148;
+      </button>
+    </div>
+  </div>
+</div>

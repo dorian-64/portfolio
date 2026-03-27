@@ -1,0 +1,106 @@
+<div class="discover-page">
+  <div class="discover-header">
+    <h1>Découvrir</h1>
+    <p>Swipez pour trouver votre match !</p>
+  </div>
+
+  <!-- Card Stack -->
+  <div class="card-stack" *ngIf="!noMoreProfiles && currentProfile">
+    <!-- Next card (behind) -->
+    <div class="profile-card card-behind" *ngIf="nextProfile">
+      <div class="card-avatar-bg" [style.background]="'linear-gradient(135deg, ' + nextProfile.avatarColor + ', ' + nextProfile.avatarColor + '99)'">
+        <span class="card-initials">{{ getInitials(nextProfile) }}</span>
+      </div>
+    </div>
+
+    <!-- Current card -->
+    <div class="profile-card card-front"
+      [class.swipe-right]="swipeDirection === 'right'"
+      [class.swipe-left]="swipeDirection === 'left'">
+
+      <div class="card-avatar-bg" [style.background]="'linear-gradient(135deg, ' + currentProfile.avatarColor + ', ' + currentProfile.avatarColor + '99)'">
+        <span class="card-initials">{{ getInitials(currentProfile) }}</span>
+        <div class="online-badge">En ligne</div>
+      </div>
+
+      <div class="card-info">
+        <div class="card-name-row">
+          <h2>{{ currentProfile.firstName }}, {{ currentProfile.age }}</h2>
+          <span class="verified-badge">&#10003;</span>
+        </div>
+        <div class="card-location">
+          <span>&#128205;</span> {{ currentProfile.location }}
+          <span class="separator">·</span>
+          <span>{{ currentProfile.occupation }}</span>
+        </div>
+        <p class="card-bio">{{ currentProfile.bio }}</p>
+        <div class="card-interests">
+          <span class="interest-tag" *ngFor="let interest of currentProfile.interests.slice(0, 3)">
+            {{ interest }}
+          </span>
+          <span class="interest-more" *ngIf="currentProfile.interests.length > 3">
+            +{{ currentProfile.interests.length - 3 }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Like/Dislike overlay indicators -->
+      <div class="swipe-indicator like-indicator" [class.visible]="swipeDirection === 'right'">
+        &#10084; LIKE
+      </div>
+      <div class="swipe-indicator nope-indicator" [class.visible]="swipeDirection === 'left'">
+        ✕ NOPE
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="card-actions" *ngIf="!noMoreProfiles">
+    <button class="action-btn dislike-btn" (click)="dislike()" [disabled]="loading" title="Passer">
+      ✕
+    </button>
+    <button class="action-btn super-like-btn" title="Super Like">
+      &#11088;
+    </button>
+    <button class="action-btn like-btn" (click)="like()" [disabled]="loading" title="J'aime">
+      &#10084;
+    </button>
+  </div>
+
+  <!-- Counter -->
+  <div class="profiles-counter" *ngIf="!noMoreProfiles">
+    <span>{{ currentIndex + 1 }} / {{ profiles.length }}</span>
+  </div>
+
+  <!-- No more profiles -->
+  <div class="no-more" *ngIf="noMoreProfiles">
+    <div class="no-more-icon">&#128522;</div>
+    <h2>Vous avez tout vu !</h2>
+    <p>Revenez plus tard pour de nouveaux profils ou rechargez.</p>
+    <button class="btn-reload" (click)="reload()">&#8635; Recharger</button>
+  </div>
+
+  <!-- Match Modal -->
+  <div class="match-overlay" *ngIf="showMatch" (click)="closeMatch()">
+    <div class="match-modal" (click)="$event.stopPropagation()">
+      <div class="match-animation">&#127881;</div>
+      <h2>C'est un Match !</h2>
+      <p>Vous et <strong>{{ matchedProfile?.firstName }}</strong> vous êtes mutuellement liké !</p>
+      <div class="match-avatars">
+        <div class="match-avatar you">
+          <div class="ma-circle" style="background: linear-gradient(135deg, #FF4458, #e91e8c)">Moi</div>
+        </div>
+        <div class="match-heart">&#10084;</div>
+        <div class="match-avatar them">
+          <div class="ma-circle" [style.background]="'linear-gradient(135deg, ' + matchedProfile?.avatarColor + ', ' + matchedProfile?.avatarColor + '99)'">
+            {{ matchedProfile ? getInitials(matchedProfile) : '' }}
+          </div>
+        </div>
+      </div>
+      <div class="match-actions">
+        <a routerLink="/matchs" class="btn-chat" (click)="closeMatch()">&#128172; Envoyer un message</a>
+        <button class="btn-continue" (click)="closeMatch()">Continuer à swiper</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,121 @@
+.matches-page {
+  min-height: 100vh;
+  padding: 80px 20px 40px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.page-header { margin-bottom: 28px; }
+
+.page-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FF4458, #e91e8c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+
+.page-header p { color: #888; font-size: 0.95rem; }
+
+.matches-container { display: flex; flex-direction: column; gap: 12px; }
+
+.match-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid #f0f0f0;
+}
+
+.match-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  border-color: rgba(255,68,88,0.2);
+}
+
+.match-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: white;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.online-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
+  background: #4caf50;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.match-info { flex: 1; min-width: 0; }
+
+.match-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.match-name-row strong { font-size: 1rem; color: #1a1a2e; }
+.match-time { font-size: 0.8rem; color: #aaa; flex-shrink: 0; }
+
+.match-last-msg {
+  color: #777;
+  font-size: 0.88rem;
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.match-new { color: #FF4458; font-size: 0.88rem; font-weight: 600; margin: 0 0 4px; }
+.match-location { font-size: 0.8rem; color: #bbb; }
+
+.match-arrow { font-size: 1.5rem; color: #ddd; flex-shrink: 0; }
+
+/* No matches */
+.no-matches {
+  text-align: center;
+  padding: 80px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.nm-icon { font-size: 4rem; }
+
+.no-matches h2 { font-size: 1.5rem; font-weight: 700; color: #333; }
+.no-matches p { color: #888; }
+
+.btn-discover {
+  padding: 13px 28px;
+  background: linear-gradient(135deg, #FF4458, #e91e8c);
+  color: white;
+  text-decoration: none;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 6px 20px rgba(255,68,88,0.3);
+  transition: all 0.2s;
+}
+
+.btn-discover:hover { transform: translateY(-2px); }

@@ -1,0 +1,57 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="shield-icon">&#128272;</div>
+      <h1>Vérification 2FA</h1>
+      <p>Entrez le code à 6 chiffres de votre application d'authentification</p>
+    </div>
+
+    <div class="alert alert-error" *ngIf="error">
+      <span>&#9888;</span> {{ error }}
+      <span class="attempts-left" *ngIf="attempts < maxAttempts">
+        ({{ maxAttempts - attempts }} essai(s) restant(s))
+      </span>
+    </div>
+
+    <!-- Live TOTP indicator -->
+    <div class="totp-live">
+      <div class="totp-live-code">{{ currentCode }}</div>
+      <div class="totp-timer">
+        <div class="timer-track">
+          <div class="timer-fill"
+            [style.width]="timerPercent + '%'"
+            [style.background]="remainingSeconds <= 5 ? '#ff4444' : 'linear-gradient(90deg, #FF4458, #e91e8c)'">
+          </div>
+        </div>
+        <span [style.color]="remainingSeconds <= 5 ? '#ff4444' : '#888'">{{ remainingSeconds }}s</span>
+      </div>
+      <p class="totp-hint">Code simulé — utilisez votre app authenticator en production</p>
+    </div>
+
+    <div class="code-input-section">
+      <input
+        type="text"
+        inputmode="numeric"
+        [value]="code"
+        (input)="onCodeInput($event)"
+        placeholder="_ _ _ _ _ _"
+        class="code-input"
+        [disabled]="loading"
+        maxlength="6"
+        autocomplete="one-time-code"
+        autofocus
+      />
+    </div>
+
+    <button class="btn-submit" [disabled]="loading || code.length !== 6" (click)="verify()">
+      <span *ngIf="loading" class="spinner"></span>
+      {{ loading ? 'Vérification...' : 'Confirmer' }}
+    </button>
+
+    <button class="btn-back" (click)="goBack()">← Retour à la connexion</button>
+
+    <div class="security-note">
+      <span>&#128274;</span> Session protégée par TOTP
+    </div>
+  </div>
+</div>
